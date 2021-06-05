@@ -3,10 +3,10 @@ import {React,Component} from 'react';
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise';
-// import { ImprovedNoise } from './jsm/math/ImprovedNoise.js';
 import Stats from 'three/examples/jsm/libs/stats.module';
+// import { useForm } from "react-hook-form";
 
-let container, stats;
+let container, stats , container1;
 
 let camera, controls, scene, renderer;
 
@@ -25,19 +25,32 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let that;
 
+
 class ZZSp extends Component {
     
-
+    
     constructor(props){
         super(props);
         that = this;
-      
+        this.state={
+            firstvalue : '',
+            secondvalue : '',
+            thirdvalue : '',
+            fourthvalue : ''
+        }
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    handleSubmit(event) {
+        alert('A values was submitted: ' + this.state.firstvalue +" " + this.state.secondvalue +" " + this.state.thirdvalue + " " + this.state.fourthvalue);
+        event.preventDefault();
+    }
     init() {
-
+       
         container = document.getElementById('container');
         container.innerHTML = '';
+        container1 = document.getElementsByClassName('field-container');
+        container1.innerHTML ='';
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -297,35 +310,42 @@ class ZZSp extends Component {
 
     }
     componentDidCatch(){}
+
+   
     render() {
         that = this;
         setTimeout(() => {
             this.init();
             this.animate();
         },1000);
+        
         return (
-                <div id="container">
+                <div id="main-container">
                    <div className="field-container">
-                       <label>Below 2 MTR to Ground</label>
-                       <br />
-                    <input></input>
-                    <br />
-                    <label>Ground Level</label>
-                    <br />
-                    <input></input>
-                    <br />
-                    <label>2MTR Above Ground</label>
-                    <br />
-                    <input></input>
-                    <br />
-                    <label>4MTR Above Ground</label>
-                    <br />
-                    <input></input>
-                    <button>Submit</button>
-                   </div>
-                <style>
-                   
-                </style>    
+                       <div>
+                        <form onSubmit={this.handleSubmit}>
+                                <label>Below 2 MTR to Ground</label>
+                                    <br />
+                            <input type="number" value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value})}></input>
+                                    <br />
+                                <label>Ground Level</label>
+                                    <br />
+                            <input type="number" value={this.state.secondvalue} onChange={(e) => this.setState({ secondvalue: e.target.value })}></input>
+                                    <br />
+                                <label>2MTR Above Ground</label>
+                                    <br />
+                            <input type="number" value={this.state.thirdvalue} onChange={(e) => this.setState({ thirdvalue: e.target.value })}></input>
+                                    <br />
+                                <label>4MTR Above Ground</label>
+                                    <br />
+                            <input type="number" value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}></input>
+                                <br />
+                                <input type="submit" value="Submit" />
+                            </form>
+                        
+                        </div>
+                   </div>  
+                   <div id="container"></div>
                 </div>   
              );
         };
