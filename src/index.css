@@ -43,3 +43,11 @@ canvas,
 .Container{
   height: 100%;
 }
+.text-input{
+  margin-left: 56px;
+}
+@media only screen and (max-width: 600px) {
+  #main-container {
+  flex-direction: column;
+  }
+}

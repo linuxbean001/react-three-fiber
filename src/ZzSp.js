@@ -4,13 +4,15 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise';
 import Stats from 'three/examples/jsm/libs/stats.module';
+import DatGui, { DatColor, DatNumber, DatButton } from "react-dat-gui";
+// import "react-dat-gui/build/react-dat-gui.css";
 // import { useForm } from "react-hook-form";
 
 let container, stats , container1;
 
 let camera, controls, scene, renderer;
 
-let mesh, texture;
+let mesh1,mesh2,mesh3,mesh4, texture;
 
 const worldWidth = 100, worldDepth = 100,
     worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2;
@@ -20,31 +22,76 @@ let helper1;
 let helper2;
 let helper3;
 
-
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let that;
 
-
 class ZZSp extends Component {
-    
     
     constructor(props){
         super(props);
         that = this;
+        
         this.state={
-            firstvalue : '',
-            secondvalue : '',
-            thirdvalue : '',
-            fourthvalue : ''
+            data: {
+                firstvalue : '',
+                secondvalue : '',
+                thirdvalue : '',
+                fourthvalue : '',
+                package: 'react-dat-gui',
+                isAwesome: true,
+                feelsLike: '#2FA1D6',
+            }
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        
+        
     }
 
     handleSubmit(event) {
-        alert('A values was submitted: ' + this.state.firstvalue +" " + this.state.secondvalue +" " + this.state.thirdvalue + " " + this.state.fourthvalue);
+        // alert('A values was submitted: '+" First Value  " + this.state.data.firstvalue +"   Secound Value   " + this.state.data.secondvalue +"   Third Value  " + this.state.data.thirdvalue + "  Fourth Value  " +  this.state.data.fourthvalue);
         event.preventDefault();
+
+        // for first Layer
+
+        if (this.state.data.firstvalue) {
+            mesh1.material.color.setHex(0xffff34);
+        }
+
+        // for second layer
+
+        if (this.state.data.secondvalue) {
+            mesh2.material.color.setHex(0x5d3b03);
+        }
+
+
+        // For bottom two Layers
+        if (this.state.data.thirdvalue <= 99) {
+            mesh3.material.color.setHex(0x98f194);
+            }else if(this.state.data.thirdvalue === 100){
+                mesh3.material.color.setHex(0xff5f1f);
+        }else{
+            mesh3.material.color.setHex(0x98f194);
+        }
+
+
+        if (this.state.data.fourthvalue < 100) {
+            mesh4.material.color.setHex(0x1f16c);
+            }else if(this.state.data.fourthvalue === 100){
+                mesh4.material.color.setHex(0xff5f1f);
+        }else{
+            mesh4.material.color.setHex(0x1f16c);
+        }
+
+        // debugger;
     }
+
+    handleUpdate = newData =>
+    this.setState(prevState => ({
+        data: { ...prevState.data, ...newData }
+        // debugger;
+    }));
+
     init() {
        
         container = document.getElementById('container');
@@ -63,8 +110,8 @@ class ZZSp extends Component {
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 10, 20000);
 
         controls = new OrbitControls(camera, renderer.domElement);
-        controls.minDistance = 500;
-        controls.maxDistance = 2500;
+        controls.minDistance = 1000;
+        controls.maxDistance = 10000;
         controls.maxPolarAngle = Math.PI / 2;
 
         //
@@ -76,8 +123,8 @@ class ZZSp extends Component {
         camera.position.x = 4000;
         controls.update();
 
-        const geometry = new THREE.PlaneGeometry(2000,2000);
-        geometry.rotateX(- Math.PI / 2);
+        const firstlayer = new THREE.PlaneGeometry(1500,2000);
+        firstlayer.rotateX(- Math.PI / 2);
             
         
         const secondlayer = new THREE.PlaneGeometry(2000, 2000)
@@ -91,7 +138,7 @@ class ZZSp extends Component {
         const fourthlayer = new THREE.PlaneGeometry(2000, 2800);
         fourthlayer.rotateX(- Math.PI / 2);
 
-        const vertices = geometry.attributes.position.array;
+        const vertices = firstlayer.attributes.position.array;
         const vertices1 = secondlayer.attributes.position.array;
         const vertices2 = thirdlayer.attributes.position.array;
         const vertices3 = fourthlayer.attributes.position.array;
@@ -109,7 +156,7 @@ class ZZSp extends Component {
             vertices3[j + 1] = data[i] * 10;
         }
 
-        geometry.computeFaceNormals(); // needed for helper
+        firstlayer.computeFaceNormals(); // needed for helper
         secondlayer.computeFaceNormals(); // needed for helper
         thirdlayer.computeFaceNormals(); // needed for helper
         fourthlayer.computeFaceNormals(); // needed for helper
@@ -120,38 +167,56 @@ class ZZSp extends Component {
         texture.wrapS = THREE.ClampToEdgeWrapping;
         texture.wrapT = THREE.ClampToEdgeWrapping;
 
-        mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ 
-            color:'#f18853',
-            map: texture }));
-        mesh.position.x = -1000;
-        mesh.position.y =  800;
-        scene.add(mesh);
+        let material1 = new THREE.MeshBasicMaterial({ color: '',map: texture});
+        mesh1 = new THREE.Mesh(firstlayer,material1);
+        mesh1.position.x = -1000;
+        mesh1.position.y =  800;
+        scene.add(mesh1);
+        
+        // mesh = new THREE.Mesh(secondlayer, new THREE.MeshBasicMaterial({ 
+        //     color: '#f9f9c0',
+        //     map: texture }));
+        // mesh.position.x = -800;
+        // mesh.position.y =  600;
+        // scene.add(mesh);
 
-        mesh = new THREE.Mesh(secondlayer, new THREE.MeshBasicMaterial({ 
-            color: '#f9f9c0',
-            map: texture }));
-        mesh.position.x = -800;
-        mesh.position.y =  600;
-        scene.add(mesh);
+        let material2 = new THREE.MeshBasicMaterial({ color: '',map: texture });
+        mesh2 = new THREE.Mesh(secondlayer,material2)
+        mesh2.position.x = -800;
+        mesh2.position.y =  600;
+        scene.add(mesh2);
 
-        mesh = new THREE.Mesh(thirdlayer, new THREE.MeshBasicMaterial({ 
-            color:'lightgreen',
-            map: texture }));
-        mesh.position.x = -600;
-        mesh.position.y = 400;
-        scene.add(mesh);
 
-        mesh = new THREE.Mesh(fourthlayer, new THREE.MeshBasicMaterial({
-            color:'#127340',
-            map: texture }));
-        mesh.position.x = -400;
-        mesh.position.y = 200;
-        scene.add(mesh);
+        // mesh = new THREE.Mesh(thirdlayer, new THREE.MeshBasicMaterial({ 
+        //     color:'lightgreen',
+        //     map: texture }));
+        // mesh.position.x = -600;
+        // mesh.position.y = 400;
+        // scene.add(mesh);
 
-        const geometryHelper = new THREE.ConeGeometry(20, 100, 3);
-        geometryHelper.translate(0, 50, 0);
-        geometryHelper.rotateX(Math.PI / 2);
-        helper = new THREE.Mesh(geometryHelper, new THREE.MeshNormalMaterial());
+        let material3 = new THREE.MeshBasicMaterial({ color: '#90ee90', map: texture });
+        mesh3 = new THREE.Mesh(thirdlayer, material3);
+        mesh3.position.x = -600;
+        mesh3.position.y = 400;
+        scene.add(mesh3);
+
+        // mesh = new THREE.Mesh(fourthlayer, new THREE.MeshBasicMaterial({
+        //     color:'#127340',
+        //     map: texture }));
+        // mesh.position.x = -400;
+        // mesh.position.y = 200;
+        // scene.add(mesh);
+
+        let material4 = new THREE.MeshBasicMaterial({ color: '#127340', map: texture });
+        mesh4 = new THREE.Mesh(fourthlayer, material4);
+        mesh4.position.x = -400;
+        mesh4.position.y = 200;
+        scene.add(mesh4);
+
+        const firstlayerHelper = new THREE.ConeGeometry(20, 100, 3);
+        firstlayerHelper.translate(0, 50, 0);
+        firstlayerHelper.rotateX(Math.PI / 2);
+        helper = new THREE.Mesh(firstlayerHelper, new THREE.MeshNormalMaterial());
         scene.add(helper);
 
         const secondlayerHelper = new THREE.ConeGeometry(20, 100, 3);
@@ -285,27 +350,30 @@ class ZZSp extends Component {
         pointer.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
         raycaster.setFromCamera(pointer, camera);
         // See if the ray from the camera into the world hits one of our meshes
-        const intersects = raycaster.intersectObject(mesh);
+        const intersects1 = raycaster.intersectObject(mesh1);
+        const intersects2 = raycaster.intersectObject(mesh2);
+        const intersects3 = raycaster.intersectObject(mesh3);
+        const intersects4 = raycaster.intersectObject(mesh4);
         // Toggle rotation bool for meshes that we clicked
-        if (intersects.length > 0) {
+        if (intersects1.length > 0) {
             helper.position.set(0, 0, 0);
-            helper.lookAt(intersects[0].face.normal);
-             helper.position.copy(intersects[0].point);
+            helper.lookAt(intersects1[0].face.normal);
+            helper.position.copy(intersects1[0].point);
         }
-        if (intersects.length > 0) {
+        if (intersects2.length > 0) {
             helper1.position.set(0, 0, 0);
-            helper1.lookAt(intersects[0].face.normal);
-             helper1.position.copy(intersects[0].point);
+            helper1.lookAt(intersects2[0].face.normal);
+             helper1.position.copy(intersects2[0].point);
         }
-        if (intersects.length > 0) {
+        if (intersects3.length > 0) {
             helper2.position.set(0, 0, 0);
-            helper2.lookAt(intersects[0].face.normal);
-             helper2.position.copy(intersects[0].point);
+            helper2.lookAt(intersects3[0].face.normal);
+             helper2.position.copy(intersects3[0].point);
         }
-        if (intersects.length > 0) {
+        if (intersects4.length > 0) {
             helper3.position.set(0, 0, 0);
-            helper3.lookAt(intersects[0].face.normal);
-             helper3.position.copy(intersects[0].point);
+            helper3.lookAt(intersects4[0].face.normal);
+             helper3.position.copy(intersects4[0].point);
         }
 
     }
@@ -314,6 +382,7 @@ class ZZSp extends Component {
    
     render() {
         that = this;
+        const { data } = this.state;
         setTimeout(() => {
             this.init();
             this.animate();
@@ -323,7 +392,7 @@ class ZZSp extends Component {
                 <div id="main-container">
                    <div className="field-container">
                        <div>
-                        <form onSubmit={this.handleSubmit}>
+                        {/* <form onSubmit={this.handleSubmit}>
                                 <label>Below 2 MTR to Ground</label>
                                     <br />
                             <input type="number" value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value})}></input>
@@ -341,12 +410,21 @@ class ZZSp extends Component {
                             <input type="number" value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}></input>
                                 <br />
                                 <input type="submit" value="Submit" />
-                            </form>
-                        
+
+                            </form> */}
+                            <DatGui data={data} onUpdate={this.handleUpdate}>
+                                <DatNumber path='firstvalue' label='Surface'min={-10} max={40} step={1} value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value })}/>
+                                <DatNumber path='secondvalue' label='Humidity' min={50} max={100} step={1} value={this.state.secondvalue} onChange={(e) => this.setState({ secondvalue: e.target.value })}/>
+                                <DatNumber path='thirdvalue' label='2MTR Ground' min={1} max={100} step={1} value={this.state.thirdvalue} onChange={(e) => this.setState({ thirdvalue: e.target.value })}/>
+                                <DatNumber path='fourthvalue' label='4MTR Ground' min={1} max={100} step={1} value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}/>
+                                <DatButton type="button"label="Submit" onClick={this.handleSubmit}></DatButton>
+                            </DatGui> 
+                            
                         </div>
                    </div>  
                    <div id="container"></div>
-                </div>   
+                </div> 
+                
              );
         };
 }
