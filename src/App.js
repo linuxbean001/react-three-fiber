@@ -1,9 +1,9 @@
 import './App.css';
-import Vijay from './ZzSp'
+import LandView from './LandView'
 function App() {
   return (
     <div className="Container">
-      <Vijay />
+      <LandView />
     </div>
   );
 }

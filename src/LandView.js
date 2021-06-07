@@ -4,9 +4,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise';
 import Stats from 'three/examples/jsm/libs/stats.module';
-import DatGui, { DatColor, DatNumber, DatButton } from "react-dat-gui";
-// import "react-dat-gui/build/react-dat-gui.css";
-// import { useForm } from "react-hook-form";
+import DatGui, { DatNumber, DatButton } from "react-dat-gui";
+import "../node_modules/react-dat-gui/dist/index.css";
 
 let container, stats , container1;
 
@@ -26,7 +25,7 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let that;
 
-class ZZSp extends Component {
+class LandView extends Component {
     
     constructor(props){
         super(props);
@@ -49,23 +48,16 @@ class ZZSp extends Component {
     }
 
     handleSubmit(event) {
-        // alert('A values was submitted: '+" First Value  " + this.state.data.firstvalue +"   Secound Value   " + this.state.data.secondvalue +"   Third Value  " + this.state.data.thirdvalue + "  Fourth Value  " +  this.state.data.fourthvalue);
         event.preventDefault();
-
-        // for first Layer
 
         if (this.state.data.firstvalue) {
             mesh1.material.color.setHex(0xffff34);
         }
 
-        // for second layer
-
         if (this.state.data.secondvalue) {
             mesh2.material.color.setHex(0x5d3b03);
         }
 
-
-        // For bottom two Layers
         if (this.state.data.thirdvalue <= 99) {
             mesh3.material.color.setHex(0x98f194);
             }else if(this.state.data.thirdvalue === 100){
@@ -73,7 +65,6 @@ class ZZSp extends Component {
         }else{
             mesh3.material.color.setHex(0x98f194);
         }
-
 
         if (this.state.data.fourthvalue < 100) {
             mesh4.material.color.setHex(0x1f16c);
@@ -83,13 +74,11 @@ class ZZSp extends Component {
             mesh4.material.color.setHex(0x1f16c);
         }
 
-        // debugger;
     }
 
     handleUpdate = newData =>
     this.setState(prevState => ({
         data: { ...prevState.data, ...newData }
-        // debugger;
     }));
 
     init() {
@@ -129,8 +118,6 @@ class ZZSp extends Component {
         
         const secondlayer = new THREE.PlaneGeometry(2000, 2000)
         secondlayer.rotateX(- Math.PI / 2);
-
-        // geometry.distanceTo(secondlayer);
         
         const thirdlayer = new THREE.PlaneGeometry(2000, 2000);
         thirdlayer.rotateX(- Math.PI / 2);
@@ -156,12 +143,10 @@ class ZZSp extends Component {
             vertices3[j + 1] = data[i] * 10;
         }
 
-        firstlayer.computeFaceNormals(); // needed for helper
-        secondlayer.computeFaceNormals(); // needed for helper
-        thirdlayer.computeFaceNormals(); // needed for helper
-        fourthlayer.computeFaceNormals(); // needed for helper
-
-        //
+        firstlayer.computeFaceNormals(); 
+        secondlayer.computeFaceNormals(); 
+        thirdlayer.computeFaceNormals(); 
+        fourthlayer.computeFaceNormals(); 
 
         texture = new THREE.CanvasTexture(this.generateTexture(data, worldWidth, worldDepth));
         texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -173,39 +158,17 @@ class ZZSp extends Component {
         mesh1.position.y =  800;
         scene.add(mesh1);
         
-        // mesh = new THREE.Mesh(secondlayer, new THREE.MeshBasicMaterial({ 
-        //     color: '#f9f9c0',
-        //     map: texture }));
-        // mesh.position.x = -800;
-        // mesh.position.y =  600;
-        // scene.add(mesh);
-
         let material2 = new THREE.MeshBasicMaterial({ color: '',map: texture });
         mesh2 = new THREE.Mesh(secondlayer,material2)
         mesh2.position.x = -800;
         mesh2.position.y =  600;
         scene.add(mesh2);
 
-
-        // mesh = new THREE.Mesh(thirdlayer, new THREE.MeshBasicMaterial({ 
-        //     color:'lightgreen',
-        //     map: texture }));
-        // mesh.position.x = -600;
-        // mesh.position.y = 400;
-        // scene.add(mesh);
-
         let material3 = new THREE.MeshBasicMaterial({ color: '#90ee90', map: texture });
         mesh3 = new THREE.Mesh(thirdlayer, material3);
         mesh3.position.x = -600;
         mesh3.position.y = 400;
         scene.add(mesh3);
-
-        // mesh = new THREE.Mesh(fourthlayer, new THREE.MeshBasicMaterial({
-        //     color:'#127340',
-        //     map: texture }));
-        // mesh.position.x = -400;
-        // mesh.position.y = 200;
-        // scene.add(mesh);
 
         let material4 = new THREE.MeshBasicMaterial({ color: '#127340', map: texture });
         mesh4 = new THREE.Mesh(fourthlayer, material4);
@@ -242,8 +205,6 @@ class ZZSp extends Component {
         stats = new Stats();
         container.appendChild(stats.dom);
 
-        //
-
         window.addEventListener('resize', this.onWindowResize);
 
     }
@@ -271,8 +232,6 @@ class ZZSp extends Component {
     }
 
     generateTexture(data, width, height) {
-
-        // bake lighting into texture
 
         let context, image, imageData, shade;
 
@@ -308,8 +267,6 @@ class ZZSp extends Component {
         }
 
         context.putImageData(image, 0, 0);
-
-        // Scaled 4x
 
         const canvasScaled = document.createElement('canvas');
         canvasScaled.width = width * 4;
@@ -392,31 +349,11 @@ class ZZSp extends Component {
                 <div id="main-container">
                    <div className="field-container">
                        <div>
-                        {/* <form onSubmit={this.handleSubmit}>
-                                <label>Below 2 MTR to Ground</label>
-                                    <br />
-                            <input type="number" value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value})}></input>
-                                    <br />
-                                <label>Ground Level</label>
-                                    <br />
-                            <input type="number" value={this.state.secondvalue} onChange={(e) => this.setState({ secondvalue: e.target.value })}></input>
-                                    <br />
-                                <label>2MTR Above Ground</label>
-                                    <br />
-                            <input type="number" value={this.state.thirdvalue} onChange={(e) => this.setState({ thirdvalue: e.target.value })}></input>
-                                    <br />
-                                <label>4MTR Above Ground</label>
-                                    <br />
-                            <input type="number" value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}></input>
-                                <br />
-                                <input type="submit" value="Submit" />
-
-                            </form> */}
                             <DatGui data={data} onUpdate={this.handleUpdate}>
-                                <DatNumber path='firstvalue' label='Surface'min={-10} max={40} step={1} value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value })}/>
-                                <DatNumber path='secondvalue' label='Humidity' min={50} max={100} step={1} value={this.state.secondvalue} onChange={(e) => this.setState({ secondvalue: e.target.value })}/>
-                                <DatNumber path='thirdvalue' label='2MTR Ground' min={1} max={100} step={1} value={this.state.thirdvalue} onChange={(e) => this.setState({ thirdvalue: e.target.value })}/>
-                                <DatNumber path='fourthvalue' label='4MTR Ground' min={1} max={100} step={1} value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}/>
+                                <DatNumber path='firstvalue' label='Below 2 MTR to Ground' min={-10} max={40} step={1} value={this.state.firstvalue} onChange={(e) => this.setState({ firstvalue: e.target.value })}/>
+                                <DatNumber path='secondvalue' label='Ground Level Humidity' min={50} max={100} step={1} value={this.state.secondvalue} onChange={(e) => this.setState({ secondvalue: e.target.value })}/>
+                                <DatNumber path='thirdvalue' label='4MTR Above Ground' min={1} max={100} step={1} value={this.state.thirdvalue} onChange={(e) => this.setState({ thirdvalue: e.target.value })}/>
+                                <DatNumber path='fourthvalue' label='4MTR Above Ground' min={1} max={100} step={1} value={this.state.fourthvalue} onChange={(e) => this.setState({ fourthvalue: e.target.value })}/>
                                 <DatButton type="button"label="Submit" onClick={this.handleSubmit}></DatButton>
                             </DatGui> 
                             
@@ -429,4 +366,4 @@ class ZZSp extends Component {
         };
 }
 
-export default ZZSp;
+export default LandView;
