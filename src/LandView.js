@@ -51,32 +51,37 @@ class LandView extends Component {
         event.preventDefault();
 
         if (this.state.data.firstvalue) {
-            mesh1.material.color.setHex(0xffff34);
-        }
 
+            mesh1.material.color.set(0xffff34);
+        }
+        
         if (this.state.data.secondvalue) {
-            mesh2.material.color.setHex(0x5d3b03);
+            mesh2.material.color.set(0x5d3b03);
         }
-
+        
         if (this.state.data.thirdvalue <= 99) {
-            mesh3.material.color.setHex(0x98f194);
-            }else if(this.state.data.thirdvalue === 100){
-                mesh3.material.color.setHex(0xff5f1f);
-        }else{
-            mesh3.material.color.setHex(0x98f194);
+            // mesh3.material.wireframe = false;
+            mesh3.material.color.set(0x98f194);
+        }else if(this.state.data.thirdvalue === 100){
+                mesh3.material.wireframe = false;
+                mesh3.material.color.set(0xff5f1f);
+            }else{
+                mesh3.material.color.set(0x98f194);
         }
-
+            
         if (this.state.data.fourthvalue < 100) {
-            mesh4.material.color.setHex(0x1f16c);
+                // mesh4.material.wireframe = false;
+                mesh4.material.color.set(0x1f16c);
             }else if(this.state.data.fourthvalue === 100){
-                mesh4.material.color.setHex(0xff5f1f);
-        }else{
-            mesh4.material.color.setHex(0x1f16c);
+                mesh4.material.wireframe = false;
+                mesh4.material.color.set(0xff5f1f);
+            }else{
+                mesh4.material.color.set(0x1f16c);
+            }
+            
         }
-
-    }
-
-    handleUpdate = newData =>
+        
+        handleUpdate = newData =>
     this.setState(prevState => ({
         data: { ...prevState.data, ...newData }
     }));
@@ -119,10 +124,10 @@ class LandView extends Component {
         const secondlayer = new THREE.PlaneGeometry(2000, 2000)
         secondlayer.rotateX(- Math.PI / 2);
         
-        const thirdlayer = new THREE.PlaneGeometry(2000, 2000);
+        const thirdlayer = new THREE.PlaneGeometry(2000, 2000 , 16);
         thirdlayer.rotateX(- Math.PI / 2);
 
-        const fourthlayer = new THREE.PlaneGeometry(2000, 2800);
+        const fourthlayer = new THREE.PlaneGeometry(2000, 2800,16);
         fourthlayer.rotateX(- Math.PI / 2);
 
         const vertices = firstlayer.attributes.position.array;
@@ -152,25 +157,25 @@ class LandView extends Component {
         texture.wrapS = THREE.ClampToEdgeWrapping;
         texture.wrapT = THREE.ClampToEdgeWrapping;
 
-        let material1 = new THREE.MeshBasicMaterial({ color: '',map: texture});
+        let material1 = new THREE.MeshBasicMaterial({ color: '', map: texture});
         mesh1 = new THREE.Mesh(firstlayer,material1);
         mesh1.position.x = -1000;
         mesh1.position.y =  800;
         scene.add(mesh1);
         
-        let material2 = new THREE.MeshBasicMaterial({ color: '',map: texture });
+        let material2 = new THREE.MeshBasicMaterial({ color: '', map: texture });
         mesh2 = new THREE.Mesh(secondlayer,material2)
         mesh2.position.x = -800;
         mesh2.position.y =  600;
         scene.add(mesh2);
 
-        let material3 = new THREE.MeshBasicMaterial({ color: '#90ee90', map: texture });
+        let material3 = new THREE.MeshBasicMaterial({ color: '', wireframe: true, wireframeLinewidth: 5 ,map: texture});
         mesh3 = new THREE.Mesh(thirdlayer, material3);
         mesh3.position.x = -600;
         mesh3.position.y = 400;
         scene.add(mesh3);
 
-        let material4 = new THREE.MeshBasicMaterial({ color: '#127340', map: texture });
+        let material4 = new THREE.MeshBasicMaterial({ color: '', wireframe: true, wireframeLinewidth: 5, map: texture});
         mesh4 = new THREE.Mesh(fourthlayer, material4);
         mesh4.position.x = -400;
         mesh4.position.y = 200;
